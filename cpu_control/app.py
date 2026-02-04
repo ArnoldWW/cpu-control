@@ -1,6 +1,9 @@
+import subprocess
+import sys
 import tkinter as tk
 from tkinter import ttk
-from cpu.cpufreq import *
+from .cpufreq import *
+
 
 class CpuApp(tk.Tk):
   def __init__(self):
@@ -67,7 +70,18 @@ class CpuApp(tk.Tk):
     return f"{khz / 1_000_000:.2f} GHz"
 
   def apply(self):
-    set_limits(self.min_var.get(), self.max_var.get())
-    set_governor(self.gov_var.get())
+    import os
+    helper_path = os.path.join(os.path.dirname(__file__), "apply.py")
+
+    cmd = [
+      "pkexec",
+      sys.executable,
+      helper_path,
+      str(self.min_var.get()),
+      str(self.max_var.get()),
+      self.gov_var.get(),
+    ]
+
+    subprocess.run(cmd)
 
     

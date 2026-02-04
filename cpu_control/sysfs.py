@@ -10,9 +10,9 @@ def cpu_cpufreq_paths():
     gov = os.path.join(cpufreq, "scaling_governor")
 
     if os.path.isdir(cpufreq) and os.path.exists(gov):
-        paths.append(cpufreq)
+      paths.append(cpufreq)
 
-    return paths
+  return paths
 
 def read(path):
   with open(path, "r") as f:
