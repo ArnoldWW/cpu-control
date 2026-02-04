@@ -43,13 +43,9 @@ def set_limits(min_freq, max_freq):
   if min_freq > max_freq:
     raise ValueError("min_freq > max_freq")
 
-  print(cpu_cpufreq_paths())
-
   for cpu in cpu_cpufreq_paths():
-    # Leer valores actuales
-    current_min = int(read(cpu + "/scaling_min_freq"))
-    current_max = int(read(cpu + "/scaling_max_freq"))
+    print(f"Setting limits for CPU: {cpu}")
     
-    print(f"CPU: {cpu}")
-    print(f" Current min: {current_min}, max: {current_max}")
-    print(f" Setting min: {min_freq}, max: {max_freq}") 
+    # Set limits
+    write(cpu + "/scaling_max_freq", str(max_freq))
+    write(cpu + "/scaling_min_freq", str(min_freq))

@@ -3,28 +3,51 @@ import sys
 import tkinter as tk
 from tkinter import ttk
 from .cpufreq import *
+from .sysfs import read, cpu_cpufreq_paths
 
 
 class CpuApp(tk.Tk):
   def __init__(self):
     super().__init__()
-    self.title("CPU Tuner")
+    self.title("CPU Control")
+    self.geometry("400x400")
 
+    # Hardware limits
     self.min_hw, self.max_hw = get_hw_limits()
+    
+    # Current freq
+    first_cpu = cpu_cpufreq_paths()[0]
+    self.current_min = int(read(first_cpu + "/scaling_min_freq"))
+    self.current_max = int(read(first_cpu + "/scaling_max_freq"))
 
-    self.min_var = tk.IntVar(value=self.min_hw)
-    self.max_var = tk.IntVar(value=self.max_hw)
+    # Current governor
+    self.current_gov = get_current_governor()
 
-    #Apply clam theme
+    # Variables for sliders
+    self.min_var = tk.IntVar(value=self.current_min)
+    self.max_var = tk.IntVar(value=self.current_max)
+
+    # Apply clam theme
     self.style = ttk.Style(self)
     self.style.theme_use("clam")
-  
+
     self.build_ui()
    
   def build_ui(self):
+
+      # ---- Current Status ----
+    ttk.Label(self, text="Current Settings", font=("TkDefaultFont", 10, "bold")).pack(anchor="w", pady=(10, 5))
+    
+    
+    ttk.Label(self, text=f"Min: {self.format_freq(self.current_min)}").pack(anchor="w")
+    ttk.Label(self, text=f"Max: {self.format_freq(self.current_max)}").pack(anchor="w")
+    ttk.Label(self, text=f"Governor: {self.current_gov}").pack(anchor="w")
+    
+    ttk.Separator(self, orient="horizontal").pack(fill="x", pady=10)
+
     # ---- Min freq ----
-    ttk.Label(self, text="Min Frequency").pack(anchor="w")
-    self.min_value_lbl = ttk.Label(self, text=f"{self.format_freq(self.min_hw)}")
+    ttk.Label(self, text="Min Frequency", font=("TkDefaultFont", 10, "bold")).pack(anchor="w")
+    self.min_value_lbl = ttk.Label(self, text=f"{self.format_freq(self.min_var.get())}")
     self.min_value_lbl.pack(anchor="e")
 
     ttk.Scale(
@@ -37,8 +60,8 @@ class CpuApp(tk.Tk):
     ).pack(fill="x")
 
     # ---- Max freq ----
-    ttk.Label(self, text="Max Frequency").pack(anchor="w")
-    self.max_value_lbl = ttk.Label(self, text=f"{self.format_freq(self.max_hw)}")
+    ttk.Label(self, text="Max Frequency", font=("TkDefaultFont", 10, "bold")).pack(anchor="w")
+    self.max_value_lbl = ttk.Label(self, text=f"{self.format_freq(self.max_var.get())}")
     self.max_value_lbl.pack(anchor="e")
 
     ttk.Scale(
@@ -51,14 +74,17 @@ class CpuApp(tk.Tk):
     ).pack(fill="x")
 
     # ---- Governor ----
-    ttk.Label(self, text="Governor").pack(anchor="w")
+    ttk.Label(self, text="Governor", font=("TkDefaultFont", 10, "bold")).pack(anchor="w")
 
     self.gov_var = tk.StringVar(value=get_current_governor())
     govs = get_available_governors()
 
     ttk.OptionMenu(self, self.gov_var, self.gov_var.get(), *govs).pack(fill="x")
 
-    ttk.Button(self, text="Apply", command=self.apply).pack(pady=10)
+    ttk.Separator(self, orient="horizontal").pack(fill="x", pady=20)
+
+    # --- Apply Button ----
+    ttk.Button(self, text="Apply", command=self.apply).pack()
 
   def update_min_label(self, value):
     self.min_value_lbl.config(text=self.format_freq(int(float(value))))
@@ -83,5 +109,22 @@ class CpuApp(tk.Tk):
     ]
 
     subprocess.run(cmd)
+    self.reload_ui()
+
+  def reload_ui(self):
+    # Destroy current widgets
+    for widget in self.winfo_children():
+      widget.destroy()
+    
+    # Update current values
+    first_cpu = cpu_cpufreq_paths()[0]
+    self.current_min = int(read(first_cpu + "/scaling_min_freq"))
+    self.current_max = int(read(first_cpu + "/scaling_max_freq"))
+
+    # Current governor
+    self.current_gov = get_current_governor()
+
+    # Rebuild UI
+    self.build_ui()
 
     
