@@ -10,7 +10,7 @@ class CpuApp(tk.Tk):
   def __init__(self):
     super().__init__()
     self.title("CPU Control")
-    self.geometry("400x400")
+    self.geometry("500x500")
 
     # Hardware limits
     self.min_hw, self.max_hw = get_hw_limits()
@@ -35,7 +35,7 @@ class CpuApp(tk.Tk):
    
   def build_ui(self):
 
-      # ---- Current Status ----
+    # ---- Current Status ----
     ttk.Label(self, text="Current Settings", font=("TkDefaultFont", 10, "bold")).pack(anchor="w", pady=(10, 5))
     
     
@@ -87,6 +87,8 @@ class CpuApp(tk.Tk):
     ttk.Button(self, text="Apply", command=self.apply).pack()
 
   def update_min_label(self, value):
+    rounded_value = round(float(value) / 100000) * 100000
+    print(f"Rounded min value: {rounded_value}")
     self.min_value_lbl.config(text=self.format_freq(int(float(value))))
 
   def update_max_label(self, value):
