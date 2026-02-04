@@ -92,7 +92,7 @@ class CpuApp(tk.Tk):
     print("Update min label to " + str(value))
     min_value = int(float(value))
     
-    # Evitar que min sea mayor que max
+    # Avoid min being greater than max
     if min_value > self.max_var.get():
         min_value = self.max_var.get()
         self.min_var.set(min_value)
@@ -102,7 +102,7 @@ class CpuApp(tk.Tk):
   def update_max_label(self, value):
     max_value = int(float(value))
     
-    # Evitar que max sea menor que min
+    # Avoid max being less than min
     if max_value < self.min_var.get():
         max_value = self.min_var.get()
         self.max_var.set(max_value)
