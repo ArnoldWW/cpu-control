@@ -3,6 +3,7 @@ import sys
 import math
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 from .cpufreq import *
 from .sysfs import read, cpu_cpufreq_paths
 
@@ -85,8 +86,12 @@ class CpuApp(tk.Tk):
 
     ttk.Separator(self, orient="horizontal").pack(fill="x", pady=20)
 
-    # --- Apply Button ----
-    ttk.Button(self, text="Apply", command=self.apply).pack()
+    # --- Buttons ----
+    button_frame = ttk.Frame(self)
+    button_frame.pack(fill="x", pady=5)
+    
+    ttk.Button(button_frame, text="Apply", command=self.apply).pack(side="left", expand=True, fill="x", padx=(0, 5))
+    ttk.Button(button_frame, text="Save Config", command=self.save_config).pack(side="left", expand=True, fill="x", padx=(5, 0))
 
   def update_min_label(self, value):
     print("Update min label to " + str(value))
@@ -129,6 +134,26 @@ class CpuApp(tk.Tk):
 
     subprocess.run(cmd)
     self.reload_ui()
+
+  def save_config(self):
+    """Save current configuration and install systemd service"""
+    helper_path = os.path.join(os.path.dirname(__file__), "install_service.py")
+    
+    cmd = [
+      "pkexec",
+      sys.executable,
+      helper_path,
+      str(self.min_var.get()),
+      str(self.max_var.get()),
+      self.gov_var.get(),
+    ]
+    
+    result = subprocess.run(cmd)
+    
+    if result.returncode == 0:
+      messagebox.showinfo("Success", "Configuration saved!\nSystemd service installed and enabled.\nSettings will be applied on next boot.")
+    else:
+      messagebox.showerror("Error", "Failed to save configuration")
 
   def reload_ui(self):
     # Destroy current widgets
