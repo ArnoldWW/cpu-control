@@ -90,10 +90,24 @@ class CpuApp(tk.Tk):
 
   def update_min_label(self, value):
     print("Update min label to " + str(value))
-    self.min_value_lbl.config(text=self.format_freq(int(float(value))))
+    min_value = int(float(value))
+    
+    # Evitar que min sea mayor que max
+    if min_value > self.max_var.get():
+        min_value = self.max_var.get()
+        self.min_var.set(min_value)
+    
+    self.min_value_lbl.config(text=self.format_freq(min_value))
 
   def update_max_label(self, value):
-    self.max_value_lbl.config(text=self.format_freq(int(float(value))))
+    max_value = int(float(value))
+    
+    # Evitar que max sea menor que min
+    if max_value < self.min_var.get():
+        max_value = self.min_var.get()
+        self.max_var.set(max_value)
+    
+    self.max_value_lbl.config(text=self.format_freq(max_value))
   
   def format_freq(self, khz):
     return f"{khz / 1_000_000:.2f} GHz"
