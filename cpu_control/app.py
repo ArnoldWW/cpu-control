@@ -1,5 +1,6 @@
 import subprocess
 import sys
+import math
 import tkinter as tk
 from tkinter import ttk
 from .cpufreq import *
@@ -13,7 +14,9 @@ class CpuApp(tk.Tk):
     self.geometry("500x500")
 
     # Hardware limits
-    self.min_hw, self.max_hw = get_hw_limits()
+    min_hw_raw, max_hw_raw = get_hw_limits()
+    self.min_hw = math.floor(min_hw_raw / 100000) * 100000
+    self.max_hw = math.floor(max_hw_raw / 100000) * 100000
     
     # Current freq
     first_cpu = cpu_cpufreq_paths()[0]
@@ -34,7 +37,6 @@ class CpuApp(tk.Tk):
     self.build_ui()
    
   def build_ui(self):
-
     # ---- Current Status ----
     ttk.Label(self, text="Current Settings", font=("TkDefaultFont", 10, "bold")).pack(anchor="w", pady=(10, 5))
     
@@ -87,8 +89,7 @@ class CpuApp(tk.Tk):
     ttk.Button(self, text="Apply", command=self.apply).pack()
 
   def update_min_label(self, value):
-    rounded_value = round(float(value) / 100000) * 100000
-    print(f"Rounded min value: {rounded_value}")
+    print("Update min label to " + str(value))
     self.min_value_lbl.config(text=self.format_freq(int(float(value))))
 
   def update_max_label(self, value):
@@ -100,6 +101,8 @@ class CpuApp(tk.Tk):
   def apply(self):
     import os
     helper_path = os.path.join(os.path.dirname(__file__), "apply.py")
+
+    print("Apply min" + str(self.min_var.get()))
 
     cmd = [
       "pkexec",
