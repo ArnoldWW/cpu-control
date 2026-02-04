@@ -20,7 +20,7 @@ class CpuApp(tk.Tk):
    
   def build_ui(self):
     # ---- Min freq ----
-    tk.Label(self, text="Min Frequency").pack(anchor="w")
+    ttk.Label(self, text="Min Frequency").pack(anchor="w")
     self.min_value_lbl = ttk.Label(self, text=f"{self.format_freq(self.min_hw)}")
     self.min_value_lbl.pack(anchor="e")
 
@@ -34,7 +34,7 @@ class CpuApp(tk.Tk):
     ).pack(fill="x")
 
     # ---- Max freq ----
-    tk.Label(self, text="Max Frequency").pack(anchor="w")
+    ttk.Label(self, text="Max Frequency").pack(anchor="w")
     self.max_value_lbl = ttk.Label(self, text=f"{self.format_freq(self.max_hw)}")
     self.max_value_lbl.pack(anchor="e")
 
@@ -48,7 +48,7 @@ class CpuApp(tk.Tk):
     ).pack(fill="x")
 
     # ---- Governor ----
-    tk.Label(self, text="Governor").pack(anchor="w")
+    ttk.Label(self, text="Governor").pack(anchor="w")
 
     self.gov_var = tk.StringVar(value=get_current_governor())
     govs = get_available_governors()
