@@ -2,28 +2,27 @@ import os
 from .sysfs import cpu_cpufreq_paths, read, write
 
 def _first_cpu():
-  cpus = cpu_cpufreq_paths()
-  if not cpus:
-    raise RuntimeError("No CPUs with cpufreq support found")
-  return cpus[0]
-
+    cpus = cpu_cpufreq_paths()
+    if not cpus:
+        raise RuntimeError("No CPUs with cpufreq support found")
+    return cpus[0]
 
 def get_hw_limits():
-  cpu = _first_cpu()
-  return (
-    int(read(cpu + "/cpuinfo_min_freq")),
-    int(read(cpu + "/cpuinfo_max_freq")),
-  )
+    cpu = _first_cpu()
+    return (
+        int(read(cpu + "/cpuinfo_min_freq")),
+        int(read(cpu + "/cpuinfo_max_freq")),
+    )
 
 
 def get_available_governors():
-  for cpu in cpu_cpufreq_paths():
-    path = cpu + "/scaling_available_governors"
-    if os.path.exists(path):
-      return read(path).split()
+    for cpu in cpu_cpufreq_paths():
+        path = cpu + "/scaling_available_governors"
+        if os.path.exists(path):
+            return read(path).split()
 
-  # Fallback: al menos mostrar el actual
-  return [get_current_governor()]
+    # Fallback: al menos mostrar el actual
+    return [get_current_governor()]
 
 
 def get_current_governor():
@@ -32,20 +31,20 @@ def get_current_governor():
 
 
 def set_governor(governor):
-  for cpu in cpu_cpufreq_paths():
-    try:
-      write(cpu + "/scaling_governor", governor)
-    except PermissionError:
-      pass
+    for cpu in cpu_cpufreq_paths():
+        try:
+            write(cpu + "/scaling_governor", governor)
+        except PermissionError:
+            pass
 
 
 def set_limits(min_freq, max_freq):
-  if min_freq > max_freq:
-    raise ValueError("min_freq > max_freq")
+    if min_freq > max_freq:
+        raise ValueError("min_freq > max_freq")
 
-  for cpu in cpu_cpufreq_paths():
-    print(f"Setting limits for CPU: {cpu}")
-    
-    # Set limits
-    write(cpu + "/scaling_max_freq", str(max_freq))
-    write(cpu + "/scaling_min_freq", str(min_freq))
+    for cpu in cpu_cpufreq_paths():
+        print(f"Setting limits for CPU: {cpu}")
+        
+        # Set limits
+        write(cpu + "/scaling_max_freq", str(max_freq))
+        write(cpu + "/scaling_min_freq", str(min_freq))
