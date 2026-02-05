@@ -3,7 +3,8 @@ from tkinter import messagebox, Tk
 from cpu_control.cpufreq import cpu_cpufreq_paths
 
 def main():
-    if not cpu_cpufreq_paths():
+    cpus = cpu_cpufreq_paths()
+    if not cpus:
         root = Tk()
         root.withdraw()
         messagebox.showerror(
