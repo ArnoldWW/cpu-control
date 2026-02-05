@@ -157,16 +157,18 @@ class CpuApp(tk.Tk):
 
     def remove_service(self):
         """Remove the systemd service"""
-        service_name = "cpu-control.service"
+        helper_path = os.path.join(os.path.dirname(__file__), 
+                                   "remove_service.py")
         try:
-            # Deshabilitar y eliminar el servicio
-            subprocess.run(["pkexec", "systemctl", "disable", service_name], check=True)
-            subprocess.run(["pkexec", "rm", f"/etc/systemd/system/{service_name}"], check=True)
-            subprocess.run(["pkexec", "systemctl", "daemon-reload"], check=True)
+            result = subprocess.run(
+                ["pkexec", sys.executable, helper_path],
+                check=True,
+                capture_output=True,
+                text=True
+            )
             messagebox.showinfo("Success", "Systemd service removed successfully.")
-        except Exception as e:
-            messagebox.showerror("Error", f"Failed to remove service, maybe doesn't exist")
-            print(f"Error: {e}")
+        except subprocess.CalledProcessError as e:
+            messagebox.showerror("Error", f"Failed to remove service:\n{e.stderr or e}")
 
     def reload_ui(self):
         # Destroy current widgets
