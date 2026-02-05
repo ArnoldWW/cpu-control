@@ -1,6 +1,7 @@
 # CPU Control
 
-GUI application to adjust minimum/maximum CPU frequency and governor on Linux.
+Personal GUI application to adjust the minimum/maximum frequency of the CPU and
+regulator in Linux. Works on Debian 13 xfce and Xubuntu.
 
 ## Requirements
 
@@ -9,11 +10,15 @@ GUI application to adjust minimum/maximum CPU frequency and governor on Linux.
 - polkitd (pkexec)
 - Permissions to write to `/sys/devices/system/cpu`
 
-## Usage
+## Usage in development
 
 ```bash
 python3 -m cpu_control.app
 ```
+
+# Install
+
+Run `./build-deb.sh` and install the generated .deb file.
 
 ## Features
 
