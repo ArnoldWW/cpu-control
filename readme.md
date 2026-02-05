@@ -1,7 +1,7 @@
 # CPU Control
 
-Personal GUI application to adjust the minimum/maximum frequency of the CPU and
-regulator in Linux. Works on Debian 13 xfce and Xubuntu.
+Personal GUI application to adjust minimum/maximum CPU frequency and governor on
+Linux. Tested on Debian 13 xfce and Xubuntu.
 
 ## Requirements
 
