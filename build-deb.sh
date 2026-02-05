@@ -20,8 +20,8 @@ Version: $VERSION
 Section: utils
 Priority: optional
 Architecture: all
-Depends: python3 (>= 3.6), python3-tk, policykit-1
-Maintainer: Your Name <your.email@example.com>
+Depends: python3 (>= 3.6), python3-tk, polkitd
+Maintainer: Arnold Rodriguez
 Description: CPU Frequency Control GUI
  A graphical interface to control CPU frequency scaling and governor.
  Allows saving configuration to apply on boot via systemd service.
