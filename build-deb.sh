@@ -33,6 +33,8 @@ cp -r cpu_control/* "$BUILD_DIR/usr/local/lib/python3/dist-packages/cpu_control/
 # Create executable script
 cat > "$BUILD_DIR/usr/local/bin/cpu-control" << 'EOF'
 #!/usr/bin/env python3
+import sys
+sys.path.insert(0, '/usr/local/lib/python3/dist-packages')
 from cpu_control.main import main
 
 if __name__ == "__main__":
