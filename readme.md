@@ -1,4 +1,22 @@
 # CPU Control
 
-Aplicación GUI para ajustar frecuencia mínima/máxima y gobernador (governor) de
-la CPU en Linux.
+GUI application to adjust minimum/maximum CPU frequency and governor on Linux.
+
+## Requirements
+
+- Python 3
+- tkinter
+- policykit (pkexec)
+- Permissions to write to `/sys/devices/system/cpu`
+
+## Usage
+
+```bash
+python3 -m cpu_control.app
+```
+
+## Features
+
+- Adjust minimum and maximum frequency
+- Select governor
+- Save configuration and create systemd service
