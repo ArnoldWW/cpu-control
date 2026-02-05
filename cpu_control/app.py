@@ -1,6 +1,7 @@
 import subprocess
 import sys
 import math
+import os
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -92,6 +93,7 @@ class CpuApp(tk.Tk):
         
         ttk.Button(button_frame, text="Apply", command=self.apply).pack(side="left", expand=True, fill="x", padx=(0, 5))
         ttk.Button(button_frame, text="Save Config", command=self.save_config).pack(side="left", expand=True, fill="x", padx=(5, 0))
+        ttk.Button(button_frame, text="Remove Service", command=self.remove_service).pack(side="left", expand=True, fill="x", padx=(5, 0))
 
     def update_min_label(self, value):
         min_value = int(float(value))
@@ -117,7 +119,7 @@ class CpuApp(tk.Tk):
         return f"{khz / 1_000_000:.2f} GHz"
 
     def apply(self):
-        import os
+        
         helper_path = os.path.join(os.path.dirname(__file__), "apply.py")
 
         print("Apply min" + str(self.min_var.get()))
@@ -170,4 +172,15 @@ class CpuApp(tk.Tk):
         # Rebuild UI
         self.build_ui()
 
-    
+    def remove_service(self):
+        """Remove the systemd service"""
+        service_name = "cpu-control.service"
+        try:
+            # Deshabilitar y eliminar el servicio
+            subprocess.run(["pkexec", "systemctl", "disable", service_name], check=True)
+            subprocess.run(["pkexec", "rm", f"/etc/systemd/system/{service_name}"], check=True)
+            subprocess.run(["pkexec", "systemctl", "daemon-reload"], check=True)
+            messagebox.showinfo("Success", "Systemd service removed successfully.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to remove service, maybe doesn't exist")
+            print(f"Error: {e}")
