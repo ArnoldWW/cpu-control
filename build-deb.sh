@@ -61,4 +61,4 @@ dpkg-deb --build "$BUILD_DIR"
 mv "${BUILD_DIR}.deb" "${PACKAGE}_${VERSION}_all.deb"
 
 echo "Package built: ${PACKAGE}_${VERSION}_all.deb"
-echo "Install with: sudo dpkg -i ${PACKAGE}_${VERSION}_all.deb"
+echo "Install with: sudo dpkg -i ${PACKAGE}_${VERSION}_all.deb or sudo apt install ./${PACKAGE}_${VERSION}_all.deb"
