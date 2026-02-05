@@ -94,7 +94,6 @@ class CpuApp(tk.Tk):
         ttk.Button(button_frame, text="Save Config", command=self.save_config).pack(side="left", expand=True, fill="x", padx=(5, 0))
 
     def update_min_label(self, value):
-        print("Update min label to " + str(value))
         min_value = int(float(value))
         
         # Avoid min being greater than max
