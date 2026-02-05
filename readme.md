@@ -6,7 +6,7 @@ GUI application to adjust minimum/maximum CPU frequency and governor on Linux.
 
 - Python 3
 - tkinter
-- policykit (pkexec)
+- polkitd (pkexec)
 - Permissions to write to `/sys/devices/system/cpu`
 
 ## Usage
