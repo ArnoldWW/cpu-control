@@ -3,6 +3,8 @@
 Personal GUI application to adjust minimum/maximum CPU frequency and governor on
 Linux. Tested on Debian 13 xfce and Xubuntu.
 
+![preview](preview/preview.png)
+
 ## Requirements
 
 - Python 3
