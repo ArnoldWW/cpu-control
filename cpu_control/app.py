@@ -15,6 +15,11 @@ class CpuApp(tk.Tk):
         self.title("CPU Control")
         self.geometry("500x500")
 
+        # add icon
+        icon_path = os.path.join(os.path.dirname(__file__), "../assets/icon.png")
+        if os.path.exists(icon_path):
+            self.iconphoto(False, tk.PhotoImage(file=icon_path))
+
         # Hardware limits
         min_hw_raw, max_hw_raw = get_hw_limits()
         self.min_hw = math.floor(min_hw_raw / 100000) * 100000
