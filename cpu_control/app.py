@@ -19,6 +19,7 @@ class CpuApp(tk.Tk):
         icon_path = os.path.join(os.path.dirname(__file__), "../assets/icon.png")
         if os.path.exists(icon_path):
             self.iconphoto(False, tk.PhotoImage(file=icon_path))
+        self.tk.call('wm', 'class', self._w, 'cpu-control')
 
         # Hardware limits
         min_hw_raw, max_hw_raw = get_hw_limits()

@@ -60,6 +60,7 @@ Icon=/usr/share/icons/hicolor/128x128/apps/cpu-control.png
 Terminal=false
 Type=Application
 Categories=System;Settings;
+StartupWMClass=cpu-control
 EOF
 
 # Build package
