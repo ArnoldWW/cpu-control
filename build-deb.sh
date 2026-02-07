@@ -13,6 +13,10 @@ mkdir -p "$BUILD_DIR/usr/local/bin"
 mkdir -p "$BUILD_DIR/usr/local/lib/python3/dist-packages/cpu_control"
 mkdir -p "$BUILD_DIR/usr/share/applications"
 
+# Create icon directory and copy icon
+mkdir -p "$BUILD_DIR/usr/share/icons/hicolor/128x128/apps"
+cp assets/icon.png "$BUILD_DIR/usr/share/icons/hicolor/128x128/apps/cpu-control.png"
+
 # Create control file
 cat > "$BUILD_DIR/DEBIAN/control" << EOF
 Package: $PACKAGE
@@ -52,10 +56,11 @@ cat > "$BUILD_DIR/usr/share/applications/cpu-control.desktop" << 'EOF'
 Name=CPU Control
 Comment=Control CPU frequency and governor
 Exec=cpu-control
-Icon=utilities-system-monitor
+Icon=/usr/share/icons/hicolor/128x128/apps/cpu-control.png
 Terminal=false
 Type=Application
 Categories=System;Settings;
+StartupWMClass=cpu-control
 EOF
 
 # Build package
