@@ -11,7 +11,7 @@ from .sysfs import read, cpu_cpufreq_paths
 
 class CpuApp(tk.Tk):
     def __init__(self):
-        super().__init__()
+        super().__init__(className="cpu-control")
         self.title("CPU Control")
         self.geometry("500x500")
 
@@ -19,7 +19,6 @@ class CpuApp(tk.Tk):
         icon_path = os.path.join(os.path.dirname(__file__), "../assets/icon.png")
         if os.path.exists(icon_path):
             self.iconphoto(False, tk.PhotoImage(file=icon_path))
-        self.tk.call('wm', 'class', self._w, 'cpu-control')
 
         # Hardware limits
         min_hw_raw, max_hw_raw = get_hw_limits()
