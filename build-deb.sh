@@ -43,6 +43,9 @@ EOF
 
 chmod 755 "$BUILD_DIR/usr/local/bin/cpu-control"
 
+# Change ownership to root
+sudo chown -R root:root "$BUILD_DIR"
+
 # Create desktop file
 cat > "$BUILD_DIR/usr/share/applications/cpu-control.desktop" << 'EOF'
 [Desktop Entry]
@@ -56,8 +59,11 @@ Categories=System;Settings;
 EOF
 
 # Build package
-dpkg-deb --build "$BUILD_DIR"
+dpkg-deb --build --root-owner-group "$BUILD_DIR"
 mv "${BUILD_DIR}.deb" "${PACKAGE}_${VERSION}_all.deb"
 
 echo "Package built: ${PACKAGE}_${VERSION}_all.deb"
 echo "Install with: sudo dpkg -i ${PACKAGE}_${VERSION}_all.deb or sudo apt install ./${PACKAGE}_${VERSION}_all.deb"
+
+# Change ownership back to user for cleanup
+sudo chown -R "$USER:$USER" "$BUILD_DIR"
