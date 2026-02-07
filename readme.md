@@ -15,7 +15,7 @@ Linux. Tested on Debian 13 xfce and Xubuntu.
 ## Usage in development
 
 ```bash
-python3 -m cpu_control.app
+python3 -m cpu_control.main
 ```
 
 # Install
