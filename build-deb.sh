@@ -19,9 +19,15 @@ mkdir -p "$BUILD_DIR/usr/local/bin"
 mkdir -p "$BUILD_DIR/usr/local/lib/python3/dist-packages/cpu_control"
 mkdir -p "$BUILD_DIR/usr/share/applications"
 
-# Create icon directory and copy icon
+# Create icon directories
 mkdir -p "$BUILD_DIR/usr/share/icons/hicolor/128x128/apps"
+mkdir -p "$BUILD_DIR/usr/share/icons/hicolor/48x48/apps"
+mkdir -p "$BUILD_DIR/usr/share/icons/hicolor/32x32/apps"
+
+# Copy icons from assets
 cp assets/icon.png "$BUILD_DIR/usr/share/icons/hicolor/128x128/apps/cpu-control.png"
+cp assets/icon_48.png "$BUILD_DIR/usr/share/icons/hicolor/48x48/apps/cpu-control.png"
+cp assets/icon_32.png "$BUILD_DIR/usr/share/icons/hicolor/32x32/apps/cpu-control.png"
 
 # Create control file
 cat > "$BUILD_DIR/DEBIAN/control" << EOF
@@ -62,7 +68,7 @@ cat > "$BUILD_DIR/usr/share/applications/cpu-control.desktop" << 'EOF'
 Name=CPU Control
 Comment=Control CPU frequency and governor
 Exec=cpu-control
-Icon=/usr/share/icons/hicolor/128x128/apps/cpu-control.png
+Icon=cpu-control
 Terminal=false
 Type=Application
 Categories=System;Settings;
