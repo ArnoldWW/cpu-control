@@ -2,7 +2,7 @@
 
 # Verify that the script is run as root
 if [[ $EUID -ne 0 ]]; then
-  echo "Este script debe ejecutarse como root. Usa: sudo ./build-deb.sh"
+  echo "This script must be run as root. Use: sudo ./build-deb.sh"
   exit 1
 fi
 
