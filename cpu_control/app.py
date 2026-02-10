@@ -16,7 +16,7 @@ class CpuApp(tk.Tk):
         self.geometry("500x500")
 
         # add icon to the window
-        icon_path = os.path.join(os.path.dirname(__file__), "fallback_assets/icon.png")
+        icon_path = os.path.join(os.path.dirname(__file__), "assets/icon.png")
         if os.path.exists(icon_path):
             self.iconphoto(True, tk.PhotoImage(file=icon_path))
 

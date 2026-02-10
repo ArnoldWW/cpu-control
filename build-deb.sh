@@ -25,9 +25,9 @@ mkdir -p "$BUILD_DIR/usr/share/icons/hicolor/48x48/apps"
 mkdir -p "$BUILD_DIR/usr/share/icons/hicolor/32x32/apps"
 
 # Copy icons from assets
-cp assets/icon.png "$BUILD_DIR/usr/share/icons/hicolor/128x128/apps/cpu-control.png"
-cp assets/icon_48.png "$BUILD_DIR/usr/share/icons/hicolor/48x48/apps/cpu-control.png"
-cp assets/icon_32.png "$BUILD_DIR/usr/share/icons/hicolor/32x32/apps/cpu-control.png"
+cp cpu_control/assets/icon.png "$BUILD_DIR/usr/share/icons/hicolor/128x128/apps/cpu-control.png"
+cp cpu_control/assets/icon_48.png "$BUILD_DIR/usr/share/icons/hicolor/48x48/apps/cpu-control.png"
+cp cpu_control/assets/icon_32.png "$BUILD_DIR/usr/share/icons/hicolor/32x32/apps/cpu-control.png"
 
 # Create control file
 cat > "$BUILD_DIR/DEBIAN/control" << EOF
