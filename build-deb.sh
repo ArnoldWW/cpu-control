@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Verify that the script is run as root
+if [[ $EUID -ne 0 ]]; then
+  echo "Este script debe ejecutarse como root. Usa: sudo ./build-deb.sh"
+  exit 1
+fi
+
 VERSION="1.0"
 PACKAGE="cpu-control"
 BUILD_DIR="${PACKAGE}-${VERSION}"
