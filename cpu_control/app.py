@@ -3,9 +3,8 @@ import sys
 import math
 import os
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
-from .cpufreq import *
+from tkinter import ttk, messagebox
+from .cpufreq import get_hw_limits, get_current_governor, get_available_governors
 from .sysfs import read, cpu_cpufreq_paths
 
 
@@ -197,7 +196,7 @@ class CpuApp(tk.Tk):
             )
             messagebox.showinfo("Success", "Systemd service removed successfully.")
         except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error", f"Failed to remove service, maybe the service doesn't exist")
+            messagebox.showerror("Error", "Failed to remove service, maybe the service doesn't exist")
             print(f"Error details: {e.stderr or e}")
     
     def reload_ui(self):
