@@ -20,15 +20,17 @@ class CpuApp(tk.Tk):
         if os.path.exists(icon_path):
             self.iconphoto(True, tk.PhotoImage(file=icon_path))
 
-        # Hardware limits
+        # Hardware limits (rounded down to nearest 100 MHz)
         min_hw_raw, max_hw_raw = get_hw_limits()
         self.min_hw = math.floor(min_hw_raw / 100000) * 100000
         self.max_hw = math.floor(max_hw_raw / 100000) * 100000
-        
-        # Current freq
+
+        # Current freq (rounded down to nearest 100 MHz)
         first_cpu = cpu_cpufreq_paths()[0]
-        self.current_min = int(read(first_cpu + "/scaling_min_freq"))
-        self.current_max = int(read(first_cpu + "/scaling_max_freq"))
+        self.current_min = math.floor(int(read(first_cpu + "/scaling_min_freq")) / 100000) * 100000
+        self.current_max = math.floor(int(read(first_cpu + "/scaling_max_freq")) / 100000) * 100000
+
+        print(f"Current settings: min={self.current_min}, max={self.current_max}")
 
         # Current governor
         self.current_gov = get_current_governor()
@@ -46,10 +48,9 @@ class CpuApp(tk.Tk):
     def build_ui(self):
         # ---- Current Status ----
         ttk.Label(self, text="Current Settings", font=("TkDefaultFont", 10, "bold")).pack(anchor="w", pady=(10, 5))
-        
-        
-        ttk.Label(self, text=f"Min: {self.format_freq(self.current_min)}").pack(anchor="w")
-        ttk.Label(self, text=f"Max: {self.format_freq(self.current_max)}").pack(anchor="w")
+             
+        ttk.Label(self, text=f"Min: {self.current_min} KHz ~ {self.format_freq(self.current_min)}").pack(anchor="w")
+        ttk.Label(self, text=f"Max: {self.current_max} KHz ~ {self.format_freq(self.current_max)}").pack(anchor="w")
         ttk.Label(self, text=f"Governor: {self.current_gov}").pack(anchor="w")
         
         ttk.Separator(self, orient="horizontal").pack(fill="x", pady=10)
@@ -101,39 +102,55 @@ class CpuApp(tk.Tk):
         ttk.Button(button_frame, text="Remove Service", command=self.remove_service).pack(side="left", expand=True, fill="x", padx=(5, 0))
 
     def update_min_label(self, value):
-        min_value = int(float(value))
+        print("Min slider value: " + str(value))  
+        min_value = self.round_freq_nearest_100MHz(int(float(value)))
+        print("Rounded min value: " + str(min_value))
         
         # Avoid min being greater than max
-        if min_value > self.max_var.get():
-            min_value = self.max_var.get()
+        if min_value > self.round_freq_nearest_100MHz(self.max_var.get()):
+            min_value = self.round_freq_nearest_100MHz(self.max_var.get())
             self.min_var.set(min_value)
         
         self.min_value_lbl.config(text=self.format_freq(min_value))
 
     def update_max_label(self, value):
-        max_value = int(float(value))
+        max_value = self.round_freq_nearest_100MHz(int(float(value)))
         
         # Avoid max being less than min
-        if max_value < self.min_var.get():
-            max_value = self.min_var.get()
+        if max_value < self.round_freq_nearest_100MHz(self.min_var.get()):
+            max_value = self.round_freq_nearest_100MHz(self.min_var.get())
             self.max_var.set(max_value)
         
         self.max_value_lbl.config(text=self.format_freq(max_value))
     
+    # Helper to format frequency in GHz
     def format_freq(self, khz):
         return f"{khz / 1_000_000:.2f} GHz"
+    
+    # round to nearest 100 MHz (100,000 KHz)
+    def round_freq_nearest_100MHz(self, khz):
+        return int(khz / 100_000) * 100_000
 
     def apply(self):
-        
+        """Apply current settings without saving"""
         helper_path = os.path.join(os.path.dirname(__file__), "apply.py")
-        print("Apply min" + str(self.min_var.get()))
+
+        # Round to nearest 100 MHz (100,000 KHz)
+        min_value = self.round_freq_nearest_100MHz(self.min_var.get())
+        max_value = self.round_freq_nearest_100MHz(self.max_var.get())
+
+        self.min_var.set(min_value)
+        self.max_var.set(max_value)
+
+        print("Apply min" + str(min_value))
+        print("Apply max" + str(max_value))
 
         cmd = [
             "pkexec",
             sys.executable,
             helper_path,
-            str(self.min_var.get()),
-            str(self.max_var.get()),
+            str(min_value),
+            str(max_value),
             self.gov_var.get(),
         ]
 
@@ -144,28 +161,35 @@ class CpuApp(tk.Tk):
         """Save current configuration and install systemd service"""
         helper_path = os.path.join(os.path.dirname(__file__), "install_service.py")
         
+        min_value_to_save = self.round_freq_nearest_100MHz(self.min_var.get())
+        max_value_to_save = self.round_freq_nearest_100MHz(self.max_var.get())
+
         cmd = [
             "pkexec",
             sys.executable,
             helper_path,
-            str(self.min_var.get()),
-            str(self.max_var.get()),
+            str(min_value_to_save),
+            str(max_value_to_save),
             self.gov_var.get(),
         ]
         
-        result = subprocess.run(cmd)
-        
-        if result.returncode == 0:
-            messagebox.showinfo("Success", "Configuration saved!\nSystemd service installed and enabled.\nSettings will be applied on next boot.")
-        else:
-            messagebox.showerror("Error", "Failed to save configuration")
+        try:
+            subprocess.run(cmd, check=True)
+            messagebox.showinfo(
+                "Success",
+                "Configuration saved!\nSystemd service installed and enabled.\nSettings will be applied on next boot."
+            )
+        except subprocess.CalledProcessError as e: 
+            print(f"Error details: {e.stderr or e}")
+        except Exception as e:
+            messagebox.showerror("Error", f"Unexpected error:\n{e}")
 
     def remove_service(self):
         """Remove the systemd service"""
         helper_path = os.path.join(os.path.dirname(__file__), 
                                    "remove_service.py")
         try:
-            result = subprocess.run(
+            subprocess.run(
                 ["pkexec", sys.executable, helper_path],
                 check=True,
                 capture_output=True,
@@ -173,8 +197,9 @@ class CpuApp(tk.Tk):
             )
             messagebox.showinfo("Success", "Systemd service removed successfully.")
         except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error", f"Failed to remove service:\n{e.stderr or e}")
-
+            messagebox.showerror("Error", f"Failed to remove service, maybe the service doesn't exist")
+            print(f"Error details: {e.stderr or e}")
+    
     def reload_ui(self):
         # Destroy current widgets
         for widget in self.winfo_children():
