@@ -20,7 +20,8 @@ python3 -m cpu_control.main
 
 # Install
 
-Run `sudo ./build-deb.sh` and install the generated .deb file.
+Run `sudo ./build-deb.sh` and install the generated .deb file with
+`sudo apt install ./xxx.deb`.
 
 ## Features
 
