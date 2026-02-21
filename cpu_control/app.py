@@ -104,7 +104,7 @@ class CpuApp(tk.Tk):
         ttk.Button(button_frame, text="Apply", command=self.apply).pack(side="left", expand=True, fill="x", padx=(0, 5))
         ttk.Button(button_frame, text="Save Config", command=self.save_config).pack(side="left", expand=True, fill="x", padx=(5, 0))
         ttk.Button(button_frame, text="Remove Service", command=self.remove_service).pack(side="left", expand=True, fill="x", padx=(5, 0))
-        ttk.Button(button_frame, text="Reload UI", command=self.reload_ui).pack(side="left", expand=True, fill="x", padx=(5, 0))
+        ttk.Button(button_frame, text="Reload/reset UI", command=self.reload_ui).pack(side="left", expand=True, fill="x", padx=(5, 0))
 
     def update_min_label(self, value):
         print("Min slider value: " + str(int(float(value))))  
