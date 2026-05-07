@@ -20,6 +20,11 @@ python3 -m cpu_control.main
 
 # Install
 
+Go to [Relases](https://github.com/ArnoldWW/cpu-control/releases) download and
+install.
+
+OR
+
 Run `sudo ./build-deb.sh` and install the generated .deb file with
 `sudo apt install ./xxx.deb`.
 
