@@ -6,8 +6,6 @@ __pycache__/
 *.so
 *.egg
 *.egg-info/
-dist/
-build/
 
 # Debian package build
 cpu-control-*/
@@ -18,7 +16,6 @@ cpu-control-*/
 .idea/
 *.swp
 *.swo
-*~
 
 # OS
 .DS_Store

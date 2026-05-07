@@ -11,7 +11,7 @@ PACKAGE="cpu-control"
 BUILD_DIR="${PACKAGE}-${VERSION}"
 
 # Clean previous build
-rm -rf "$BUILD_DIR" "${PACKAGE}_${VERSION}_all.deb"
+rm -rf "$BUILD_DIR" "${PACKAGE}_${VERSION}.deb"
 
 # Create directory structure
 mkdir -p "$BUILD_DIR/DEBIAN"
@@ -77,10 +77,10 @@ EOF
 
 # Build package
 dpkg-deb --build --root-owner-group "$BUILD_DIR"
-mv "${BUILD_DIR}.deb" "${PACKAGE}_${VERSION}_all.deb"
+mv "${BUILD_DIR}.deb" "${PACKAGE}_${VERSION}.deb"
 
-echo "Package built: ${PACKAGE}_${VERSION}_all.deb"
-echo "Install with: sudo apt install ./${PACKAGE}_${VERSION}_all.deb"
+echo "Package built: ${PACKAGE}_${VERSION}.deb"
+echo "Install with: sudo apt install ./${PACKAGE}_${VERSION}.deb"
 
 # Change ownership back to user for cleanup
 sudo chown -R "$USER:$USER" "$BUILD_DIR"
