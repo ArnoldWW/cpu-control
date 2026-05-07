@@ -6,7 +6,7 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 fi
 
-VERSION="1.0"
+VERSION="2.0"
 PACKAGE="cpu-control"
 BUILD_DIR="${PACKAGE}-${VERSION}"
 
