@@ -3,7 +3,7 @@
 Personal GUI application to adjust minimum/maximum CPU frequency and governor on
 Linux. Tested on Debian 13 xfce and Xubuntu.
 
-![preview](preview/preview.png)
+![preview](preview/preview_v2.0.png)
 
 ## Requirements
 
