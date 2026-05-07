@@ -5,13 +5,16 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from .cpufreq import get_hw_limits, get_current_governor, get_available_governors
 from .sysfs import read, cpu_cpufreq_paths
+from .cpu_info import get_cpu_info
 
 
 class CpuApp(tk.Tk):
     def __init__(self):
         super().__init__(className="cpu-control")
         self.title("CPU Control")
-        self.geometry("500x500")
+        self.geometry("600x600")
+
+        self.model, self.logical, self.physical = get_cpu_info()
 
         # add icon to the window
         icon_path = os.path.join(os.path.dirname(__file__), "assets/icon.png")
@@ -50,6 +53,14 @@ class CpuApp(tk.Tk):
         self.build_ui()
     
     def build_ui(self):
+        # ---- CPU Info ----
+        ttk.Label(self, text="CPU Info", font=("TkDefaultFont", 10, "bold")).pack(anchor="w", pady=(10, 5))
+
+        ttk.Label(self, text=f"CPU Model: {self.model}").pack(anchor="w")
+        ttk.Label(self, text=f"Cores: {self.physical} | Threads: {self.logical}").pack(anchor="w")
+
+        ttk.Separator(self, orient="horizontal").pack(fill="x", pady=10)
+
         # ---- Current Status ----
         ttk.Label(self, text="Current Settings", font=("TkDefaultFont", 10, "bold")).pack(anchor="w", pady=(10, 5))
              
