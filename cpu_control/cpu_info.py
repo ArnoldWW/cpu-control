@@ -35,5 +35,5 @@ def get_cpu_info():
     except Exception:
         pass
 
-    physical = len(physical_pairs) or "Unknown"
+    physical = len(physical_pairs) or 0
     return model, logical, int(physical)
