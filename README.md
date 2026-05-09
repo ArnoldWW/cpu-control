@@ -12,7 +12,7 @@ Linux. Tested on Debian 13 xfce and Xubuntu.
 - polkitd (pkexec)
 - Permissions to write to `/sys/devices/system/cpu`
 
-## Usage in development
+## Run in development
 
 ```bash
 python3 -m cpu_control.main
