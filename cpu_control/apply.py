@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 import sys
 import os
-
-# Add parent directory to path to import cpu_control
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from cpu_control.cpufreq import set_limits, set_governor
+from .cpufreq import set_limits, set_governor
 
 if __name__ == "__main__":
+    print("Apply helper started with args:", sys.argv)
+
     if len(sys.argv) != 4:
         print("Usage: apply_helper.py <min_freq> <max_freq> <governor>")
         sys.exit(1)

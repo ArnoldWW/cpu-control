@@ -152,7 +152,7 @@ class CpuApp(tk.Tk):
 
     def apply(self):
         """Apply current settings without saving"""
-        helper_path = os.path.join(os.path.dirname(__file__), "apply.py")
+        module_path = os.path.dirname(os.path.dirname(__file__))
 
         # Round to down nearest 10 MHz (10,000 KHz)
         min_value = self.round_freq_nearest_10_mhz(self.min_var.get())
@@ -166,59 +166,76 @@ class CpuApp(tk.Tk):
 
         cmd = [
             "pkexec",
+            "env",
+            f"PYTHONPATH={module_path}",
             sys.executable,
-            helper_path,
+            "-m",
+            "cpu_control.apply",
             str(min_value),
             str(max_value),
             self.gov_var.get(),
         ]
+
+        print("Running command:", " ".join(cmd))
 
         subprocess.run(cmd)
         self.reload_ui()
 
     def save_config(self):
         """Save current configuration and install systemd service"""
-        helper_path = os.path.join(os.path.dirname(__file__), "install_service.py")
+        module_path = os.path.dirname(os.path.dirname(__file__))
         
         min_value_to_save = self.round_freq_nearest_10_mhz(self.min_var.get())
         max_value_to_save = self.round_freq_nearest_10_mhz(self.max_var.get())
 
         cmd = [
             "pkexec",
+            "env",
+            f"PYTHONPATH={module_path}",
             sys.executable,
-            helper_path,
+            "-m",
+            "cpu_control.install_service",
             str(min_value_to_save),
             str(max_value_to_save),
             self.gov_var.get(),
         ]
         
         try:
-            subprocess.run(cmd, check=True)
+            subprocess.run(cmd, check=True, capture_output=True, text=True)
             messagebox.showinfo(
                 "Success",
                 "Configuration saved!\nSystemd service installed and enabled.\nSettings will be applied on next boot."
             )
-        except subprocess.CalledProcessError as e: 
-            print(f"Error details: {e.stderr or e}")
-        except Exception as e:
-            messagebox.showerror("Error", f"Unexpected error:\n{e}")
+        
+        except subprocess.CalledProcessError as e:
+            print(f"Error details: {e.stderr}")
+            messagebox.showerror("Error", f"{e.stderr}")
 
     def remove_service(self):
         """Remove the systemd service"""
-        helper_path = os.path.join(os.path.dirname(__file__), 
-                                   "remove_service.py")
+        module_path = os.path.dirname(os.path.dirname(__file__))
+
+        cmd = [
+            "pkexec",
+            "env",
+            f"PYTHONPATH={module_path}",
+            sys.executable,
+            "-m",
+            "cpu_control.remove_service"
+        ]
+
         try:
             subprocess.run(
-                ["pkexec", sys.executable, helper_path],
+                cmd,
                 check=True,
                 capture_output=True,
                 text=True
             )
             messagebox.showinfo("Success", "Systemd service removed successfully.")
         except subprocess.CalledProcessError as e:
-            messagebox.showerror("Error", "Failed to remove service, maybe the service doesn't exist")
-            print(f"Error details: {e.stderr or e}")
-    
+            print(f"Error details: {e.stderr}")
+            messagebox.showerror("Error", f"{e.stderr}")
+
     def reload_ui(self):
         # Destroy current widgets
         for widget in self.winfo_children():
