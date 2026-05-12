@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import sys
-import os
 from .cpufreq import set_limits, set_governor
 
 if __name__ == "__main__":
