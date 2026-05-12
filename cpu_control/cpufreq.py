@@ -14,7 +14,6 @@ def get_hw_limits():
         int(read(cpu + "/cpuinfo_max_freq")),
     )
 
-
 def get_available_governors():
     for cpu in cpu_cpufreq_paths():
         path = cpu + "/scaling_available_governors"
@@ -24,11 +23,9 @@ def get_available_governors():
     # Fallback: al menos mostrar el actual
     return [get_current_governor()]
 
-
 def get_current_governor():
     cpu = _first_cpu()
     return read(cpu + "/scaling_governor")
-
 
 def set_governor(governor):
     for cpu in cpu_cpufreq_paths():
@@ -36,7 +33,6 @@ def set_governor(governor):
             write(cpu + "/scaling_governor", governor)
         except PermissionError:
             pass
-
 
 def set_limits(min_freq, max_freq):
     if min_freq > max_freq:

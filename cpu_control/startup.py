@@ -22,7 +22,6 @@ def set_cpu_frequencies(min_freq, max_freq):
         with open(os.path.join(cpu_path, "scaling_max_freq"), "w") as f:
             f.write(str(max_freq))
 
-
 def set_governor(governor):
     """Set governor for all CPUs"""
     cpu_dir = "/sys/devices/system/cpu"
@@ -33,7 +32,6 @@ def set_governor(governor):
             if os.path.exists(cpufreq_path):
                 with open(os.path.join(cpufreq_path, "scaling_governor"), "w") as f:
                     f.write(governor)
-
 
 if __name__ == "__main__":
     config = load_config()
