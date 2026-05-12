@@ -4,15 +4,15 @@ import sys
 from config import load_config
 
 CONFIG_FILE = "/etc/cpu-control.conf"
+CPU_DIR = "/sys/devices/system/cpu"
 
 def set_cpu_frequencies(min_freq, max_freq):
     """Set CPU frequencies for all CPUs"""
     cpu_paths = []
-    cpu_dir = "/sys/devices/system/cpu"
 
-    for entry in os.listdir(cpu_dir):
+    for entry in os.listdir(CPU_DIR):
         if entry.startswith("cpu") and entry[3:].isdigit():
-            cpufreq_path = os.path.join(cpu_dir, entry, "cpufreq")
+            cpufreq_path = os.path.join(CPU_DIR, entry, "cpufreq")
             if os.path.exists(cpufreq_path):
                 cpu_paths.append(cpufreq_path)
 
@@ -24,11 +24,10 @@ def set_cpu_frequencies(min_freq, max_freq):
 
 def set_governor(governor):
     """Set governor for all CPUs"""
-    cpu_dir = "/sys/devices/system/cpu"
 
-    for entry in os.listdir(cpu_dir):
+    for entry in os.listdir(CPU_DIR):
         if entry.startswith("cpu") and entry[3:].isdigit():
-            cpufreq_path = os.path.join(cpu_dir, entry, "cpufreq")
+            cpufreq_path = os.path.join(CPU_DIR, entry, "cpufreq")
             if os.path.exists(cpufreq_path):
                 with open(os.path.join(cpufreq_path, "scaling_governor"), "w") as f:
                     f.write(governor)
