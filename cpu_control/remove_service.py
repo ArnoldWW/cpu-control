@@ -3,22 +3,22 @@ import subprocess
 import os
 import sys
 
-service_name = "cpu-control.service"
-service_path = f"/etc/systemd/system/{service_name}"
+SERVICE_NAME = "cpu-control.service"
+SERVICE_PATH = f"/etc/systemd/system/{SERVICE_NAME}"
 
 if __name__ == "__main__":
     try:
         subprocess.run(
-            ["systemctl", "stop", service_name],
+            ["systemctl", "stop", SERVICE_NAME],
             check=True,
         )
         subprocess.run(
-            ["systemctl", "disable", service_name], 
+            ["systemctl", "disable", SERVICE_NAME], 
             check=True, 
         )
         
-        if os.path.exists(service_path):
-            os.remove(service_path)
+        if os.path.exists(SERVICE_PATH):
+            os.remove(SERVICE_PATH)
 
         subprocess.run(
             ["systemctl", "daemon-reload"],

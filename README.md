@@ -18,7 +18,7 @@ Linux. Tested on Debian 13 xfce and Xubuntu.
 python3 -m cpu_control.main
 ```
 
-# Install
+## Install
 
 Go to the [Releases section](https://github.com/ArnoldWW/cpu-control/releases),
 download and install.

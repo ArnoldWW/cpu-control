@@ -17,6 +17,8 @@ RemainAfterExit=yes
 WantedBy=multi-user.target
 """
 
+SERVICE_PATH = "/etc/systemd/system/cpu-control.service"
+
 if __name__ == "__main__":
     min_freq = int(sys.argv[1])
     max_freq = int(sys.argv[2])
@@ -35,9 +37,7 @@ if __name__ == "__main__":
         startup_path=startup_path
     )
     
-    service_file = "/etc/systemd/system/cpu-control.service"
-    
-    with open(service_file, 'w') as f:
+    with open(SERVICE_PATH, 'w') as f:
         f.write(service_content)
     
     print("Service file created")
